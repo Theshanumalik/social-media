@@ -14,7 +14,7 @@ app.use(express.urlencoded({extended: false}))
 DBconnection(DB_URI) //Database connection stablishing
 
 // Routes
-
+app.use('/api/auth', require('./routes/auth'));
 
 
 app.listen(port, ()=> {
