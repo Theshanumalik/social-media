@@ -1,14 +1,40 @@
 const { validationResult } = require("express-validator");
 const User = require("../schema/User");
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
+const jwt = require("jsonwebtoken");
+const secretKey = "sljodso749853lfjsf@j843"
+const login = async (req, res) => {
+    const {email, password} = req.body;
+    try {
+        const user = await User.findOne({email});
+        if(!user) {
+            return res.status(401).json("Incorrect email or password")
+        }
+        const isCorrectPass = await bcrypt.compare(password, user.password);
+        if(!isCorrectPass) {
+            console.log("hello")
+            return res.status(401).json("Incorrect email or password")
+        }
+        // Creating access token
+        const token = jwt.sign({
+            id: user._id
+        }, secretKey);
 
-const login = (req, res) => {
-    res.json("hello")
+        // Sending access-token and user data
+        res.cookie("access-token", token, {
+            maxAge: 1000 * 60 * 60 * 24 * 7,
+            httpOnly: true
+        }).json(user)
+
+    } catch (error) {
+        res.status(500).json("Enternal server error");
+        console.log(error);
+    }
 }
 const register = async (req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
-        return res.json(errors)
+        return res.json(errors);
     }
     try {
         let user = await User.findOne({email: req.body.email});
@@ -22,11 +48,23 @@ const register = async (req, res) => {
             password: hashPass,
             name: req.body.name
         });
-        res.json(hashPass);
+         // Creating access token
+         const token = jwt.sign({
+            id: user._id
+        }, secretKey);
+
+        res.cookie("access-token", token, {
+            maxAge: 1000 * 60 * 60 * 24 * 7,
+            httpOnly: true
+        }).json(user)
     } catch (error) {
-        res.status(500).json("Enternal server error")
-        console.log(error)
+        res.status(500).json("Enternal server error");
+        console.log(error);
     }
 }
 
-module.exports = {login, register}
+const logout = async (req, res) => {
+    res.clearCookie("access-token").json("user logged out successfully")
+}
+
+module.exports = {login, register, logout}
