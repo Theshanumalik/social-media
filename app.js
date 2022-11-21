@@ -1,17 +1,17 @@
 // Modules
+const cookieParser = require('cookie-parser');
 const express = require('express');
 const DBconnection = require('./utils/DBconncetion');
+const { MONGO_URI, PORT } = require('./utils/globalVariables');
 const app = express()
 
-// utils
-const DB_URI = 'mongodb://localhost:27017/social-media';
-const port = 5000;
 
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({extended: false}))
+app.use(cookieParser())
 
-DBconnection(DB_URI) //Database connection stablishing
+DBconnection(MONGO_URI) //Database connection stablishing
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
@@ -24,6 +24,6 @@ app.use('/api/post', require('./routes/post'))
 //     })
 // })
 
-app.listen(port, ()=> {
-    console.log(`Server is listening at http://localhost:${port}`)
+app.listen(PORT, ()=> {
+    console.log(`Server is listening at http://localhost:${PORT}`)
 })

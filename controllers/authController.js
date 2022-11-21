@@ -2,7 +2,7 @@ const { validationResult } = require("express-validator");
 const User = require("../schema/User");
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
-const secretKey = "sljodso749853lfjsf@j843"
+const { secretKey } = require("../utils/globalVariables");
 const login = async (req, res) => {
     const {email, password} = req.body;
     try {
