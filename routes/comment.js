@@ -1,10 +1,8 @@
 const express = require('express');
-const { createPost, likePost, getUserAllPost } = require('../controllers/postControllers');
+const { writeComment } = require('../controllers/commentController');
 const isAuthenticated = require('../middlewares/isAuthenticated');
 const { getTrimedValue } = require('../utils/getSafeValue');
 const router = express.Router();
 router.use(isAuthenticated)
-router.post("/create", getTrimedValue, createPost)
-router.put('/like/:postId', likePost)
-router.get('/:userId', getUserAllPost)
+router.post('/add/:postId', getTrimedValue, writeComment)
 module.exports = router

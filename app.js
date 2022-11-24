@@ -16,7 +16,7 @@ DBconnection(MONGO_URI) //Database connection stablishing
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/post', require('./routes/post'))
-
+app.use('/api/comment/', require('./routes/comment'))
 // app.get("/", (req, res)=> {
 //     res.cookie("accessToken", token, {
 //         maxAge: 1000 * 60 * 60 * 24 * 7,

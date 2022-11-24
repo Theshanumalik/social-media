@@ -19,9 +19,13 @@ const createPost = async (req, res) => {
         return res.status(500).json("Enternal server error")
     }
 }
+
 const likePost = async (req, res) => {
     try {
         const post = await Post.findById(req.params.postId);
+        if(!post) {
+            return res.status(404).json("No post found")
+        }
         const isLiked = post.likes.includes(req.user);
         if(isLiked) {
              await Post.findByIdAndUpdate(req.params.postId, {
@@ -42,5 +46,18 @@ const likePost = async (req, res) => {
         return res.status(500).json("Enternal server error")
     }
 }
+const getUserAllPost = async (req, res) => {
+    const userId = req.params.userId;
+    try {
+        const userPosts = await Post.find({user: userId});
+        if(userPosts.length == 0) {
+            return res.status(404).json("No post found");
+        }
+        res.json(userPosts);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json("Enternal server error")
+    }
+}
 
-module.exports = {createPost, likePost}
+module.exports = {createPost, likePost, getUserAllPost}

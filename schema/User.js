@@ -24,6 +24,30 @@ const userSchema = mongoose.Schema({
         type: String,
         default: 'http://localhost:5000/public/userDefault.jpg'
     },
+    followers: [
+        {
+            userId: {
+                type: mongoose.Schema.Types.ObjectId,
+                required: [true, 'follower userId cannot be empty']
+            },
+            addedAt: {
+                type: Date,
+                default: Date.now
+            }
+        }
+    ],
+    followings: [
+        {
+            userId: {
+                type: mongoose.Schema.Types.ObjectId,
+                required: [true, 'follower userId cannot be empty']
+            },
+            addedAt: {
+                type: Date,
+                default: Date.now
+            }
+        }
+    ]
 }, {timestamp: true});
 
 const User = mongoose.model("user", userSchema);
