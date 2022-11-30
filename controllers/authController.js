@@ -21,10 +21,11 @@ const login = async (req, res) => {
         }, secretKey);
 
         // Sending access-token and user data
+        const {password: Upassword, ...others} = user._doc
         res.cookie("access-token", token, {
             maxAge: 1000 * 60 * 60 * 24 * 7,
             httpOnly: true
-        }).json(user)
+        }).json(others)
 
     } catch (error) {
         res.status(500).json("Enternal server error");
